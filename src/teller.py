@@ -26,14 +26,75 @@ class StoryTeller():
     def tell(self, *args, **kwargs):
         '''Tell a story.
         '''
+
+        def linearize(story, actor1, actor2):
+            '''
+            (1) Order elements of surface sentence.
+            (2) Add punctuation to surface sentence.
+            '''
+            res = ''
+            comma_triggers = ['yet']
+            ignore_at_sentence_start = ['and', 'but']
+            sent_starters = ['so', 'but']
+
+            #Construct opening
+            opening_link1 = story['opening'][0][0]
+            opening_link2 = story['opening'][0][1]
+            opening_sentences = story['opening'][1]
+            res = '{} {} {}'.format(actor1, opening_sentences[0], actor2)
+            if opening_link1 in comma_triggers:
+                res = res+', {} '.format(opening_link1)
+            else:
+                res = res+' {} '.format(opening_link1)
+            res = res+'{} {} {}. '.format(actor1, opening_sentences[1], actor2)
+            if opening_link2 in ignore_at_sentence_start:
+                pass
+            else:
+                res = res+'{} '.format(opening_link2.capitalize())
+
+            #Construct middle
+            for n,(lnk,sent) in enumerate(story['middle'][:-1]):
+                #Skip the final link.
+                if n==len(story['middle'][:-1])-1:
+                    res = res+"{} {} {}".format(actor1, sent, actor2)
+                    break
+                res = res+"{} {} {}".format(actor1, sent, actor2)
+                if lnk in comma_triggers:
+                    res = res+', {} '.format(lnk)
+                elif lnk in sent_starters:
+                    res = res+'. {} '.format(lnk.capitalize())
+                else:
+                    res = res+' {} '.format(lnk)
+            middle_end_lnk = story['middle'][-1][0]
+            middle_end_sent = story['middle'][-1][1]
+            if middle_end_lnk in sent_starters:
+                res = res+'. {} '.format(middle_end_lnk.capitalize())
+                res = res+'{} {} {}. '.format(actor1, middle_end_sent, actor2)
+            else:
+                res = res+'. {} {} {}. '.format(actor1, middle_end_sent, actor2)
+
+            #Construct closing
+            res = res+'{} {} {}.'.format(actor1, story_bundle['closing'], actor2)
+
+            return res
+
+
         action_list, actor1, actor2 = self.select_midpoint(*args, **kwargs)
         print action_list
         links = graph.get_links(self.action_graph, action_list)
+
+        story_bundle =  {
+                        'opening': (links[0:2], action_list[:2]),
+                        'middle': zip(links[2:-1], action_list[2:-1]),
+                        'closing': action_list[-1]
+                        }
+
+        print linearize(story_bundle, actor1, actor2)
         
-        for i in range(len(action_list[:-1])):
-            print "{} {} {}".format(actor1, action_list[i], actor2)
-            print "{}".format(links[i])
-        print "{} {} {}".format(actor1, action_list[-1], actor2)
+        #for i in range(len(action_list[:-1])):
+        #    print "{} {} {}".format(actor1, action_list[i], actor2)
+        #    print "{}".format(links[i])
+        #print "{} {} {}".format(actor1, action_list[-1], actor2)
 
     def select_midpoint(self, *args, **kwargs):
         '''Dummy.'''
@@ -91,5 +152,3 @@ if __name__ == "__main__":
     print nf, len(mex)
     '''
     #st.tell()
-
-
