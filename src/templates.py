@@ -148,13 +148,14 @@ SETTING_DESCRIPTIONS = [
     "#PREP #DET #AMB #LOC, #NAME waited for #NAME2. #GPR knew #NAME2 would be coming, because #GPR always came at this time.",
     "#Name looked around the #NEG_AMB #LOC, wondering how #GPR had ended up here.",
     "The #POS_LOC was #POS_AMB and #POS_AMB, causing a smile to light #NAME’s face.",
-    “#NAME began to feel weary while looking around the #NEG_AMB, #NEG_AMB #NEG_LOC.”,
-    “AS #NAME entered the #POS_LOC, #GPR was struck by the sound of children’s laughter filling the air.”,
-    “The #NEG_AMB #NEG_LOC made #NAME uncomfortable, but #GPR had no option but to stay there.”,
-    “The #POS_LOC always reminded #NAME of home because of how #POS_AMB and #POS_AMB it was.”,
-    “The #NEG_LOC #NAME found #PNR in was #NEG_AMB and #NEG_AMB.”,
-    “#NAME2 hated #NEG_AMB #NEG_LOC s like the  one #GPR currently found #PNR in.”,
-    “#NAME walked confidently through the #AMB #LOC.”,
+    "#NAME began to feel weary while looking around the #NEG_AMB, #NEG_AMB #NEG_LOC.",
+    "AS #NAME entered the #POS_LOC, #GPR was struck by the sound of children’s laughter filling the air.",
+    "The #NEG_AMB #NEG_LOC made #NAME uncomfortable, but #GPR had no option but to stay there.",
+    "The #POS_LOC always reminded #NAME of home because of how #POS_AMB and #POS_AMB it was.",
+    "The #NEG_LOC #NAME found #PNR in was #NEG_AMB and #NEG_AMB.",
+    "#NAME2 hated #NEG_AMB #NEG_LOC s like the  one #GPR currently found #PNR in.",
+    "#NAME walked confidently through the #AMB #LOC.",
+    “It was late in the evening when #NAME found #PNR in a #AMB #LOC.”,
     ]
 //How do you pluralize locations?
 PAIRS_BUT = [
