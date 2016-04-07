@@ -2,7 +2,7 @@
 Rendering functions for templates.
 '''
 from random import choice
-
+from pattern.en import tag, conjugate, PAST
 import templates
 
 mappings = {
@@ -82,7 +82,7 @@ def simplepastify(in_string):
             tmp = conjugate(wrd, tense=PAST)
         return tmp
 
-    for i in action_string.split('_'):
+    for i in in_string.split('_'):
         res.append(process(i))
     return  '_'.join('%s' % r for r in res)
 
