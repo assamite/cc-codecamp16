@@ -79,10 +79,27 @@ def parse_NOC(tsv_path=NOC_path):
     #print headers
     characters = {}
     for d in data:
-        char_dict = {}
+        char_dict = {"Character": [],
+                     "Canonical Name": [],
+                     "Gender": [],
+                     "Address 1": [],
+                     "Address 2": [],
+                     "Address 3": [],
+                     "Politics": [], 
+                     "Marital Status": [],
+                     "Opponent": [],
+                     "Typical Activity": [],
+                     "Vehicle of Choice": [],
+                     "Weapon of Choice": [],
+                     "Seen Wearing": [],
+                     "Domains": [],
+                     #Genres    Fictive Status    Portrayed By    Creator    Creation    Group Affiliation    Fictional World    Category    
+                     'Negative Talking Points': [],
+                     "Positive Talking Points": [],
+                    }
         char = d[0]
-        for i in range(len(d[1:])):
-            char_dict[headers[i+1]] = [e.strip() for e in d[i+1].split(",") if len(e) > 0]
+        for i in range(len(d)):
+            char_dict[headers[i]] = [e.strip() for e in d[i].split(",") if len(e) > 0]
         characters[char] = char_dict
     return characters
 
