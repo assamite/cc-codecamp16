@@ -61,6 +61,32 @@ def render_char_desc(character, tmpl):
     rendered = render_gender(character, rendered)
     return rendered
 
+def simplepastify(in_string):
+    '''
+    params:
+    :action_string: the underlying string representation (with underscores) to change to past tense
+
+    returns the changed underlying string representation
+    '''
+    res = []
+
+    def process(wrd):
+        tmp = ''
+        ignore_pos = ['IN', 'RP', 'TO']
+        exception_lemma = ['flatter', 'flattered']
+        if tag(wrd)[0][1] in ignore_pos:
+            tmp = wrd
+        elif any(wrd in ex_l for ex_l in exception_lemma):
+            tmp = wrd
+        else:
+            tmp = conjugate(wrd, tense=PAST)
+        return tmp
+
+    for i in action_string.split('_'):
+        res.append(process(i))
+    return  '_'.join('%s' % r for r in res)
+
+
 if __name__ == "__main__":
     import parse
     tmpls = templates.CHARACTER_DESCRIPTIONS
@@ -71,5 +97,3 @@ if __name__ == "__main__":
         if tmpl is None:
             print char
         print render_char_desc(char, tmpl)
-
-
