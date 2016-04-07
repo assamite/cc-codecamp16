@@ -36,12 +36,12 @@ def parse_midpoints(tsv_path=midpoints_path):
     dict['exemplars'] = []
     for d in data:
         b,m,a,e = d
-        bs = [e.strip() for e in b.split(",")]
-        ms = [e.strip() for e in m.split(",")]
-        aes = [e.strip() for e in a.split(",")]
-        es = tuple(e.split(":"))
+        bs = [e.strip() for e in b.strip().split(",") if len(e) > 0]
+        ms = [e.strip() for e in m.strip().split(",") if len(e) > 0]
+        al = [e.strip() for e in a.strip().split(",") if len(e) > 0]
+        es = tuple(e.strip().split(":"))
         # All combinations for chains
-        chains = list(itertools.product(bs,ms,aes))
+        chains = list(itertools.product(bs,ms,al))
         for c in chains:
             dict['chains'].append(c)
             dict['exemplars'].append(es)
@@ -54,7 +54,7 @@ def parse_initials(tsv_path=initials_path):
     actions = []
     for d in data:
         initial = [d[0]]
-        representations = [e.strip() for e in d[3].split(",")]
+        representations = [e.strip() for e in d[3].split(",") if len(e) > 0]
         mappings = list(itertools.product(initial, representations))
         actions = actions + mappings
     return actions
@@ -62,12 +62,13 @@ def parse_initials(tsv_path=initials_path):
 
 def parse_closings(tsv_path=closings_path):
     lines = [l.strip().split("\t") for l in open(tsv_path).readlines()]
-    headers, data = lines[0], lines[1:]
+    # After line 244 the closings are not in the same format.
+    headers, data = lines[0], lines[1:244]
     actions = []
     for d in data:
-        initial = [d[0]]
-        representations = [e.strip() for e in d[2].split(",")]
-        mappings = list(itertools.product(initial, representations))
+        closing = [d[0]]
+        representations = [e.strip() for e in d[2].split(",") if len(e) > 0]
+        mappings = list(itertools.product(closing, representations))
         actions = actions + mappings
     return actions
 
@@ -81,7 +82,7 @@ def parse_NOC(tsv_path=NOC_path):
         char_dict = {}
         char = d[0]
         for i in range(len(d[1:])):
-            char_dict[headers[i+1]] = [e.strip() for e in d[i+1].split(",")]
+            char_dict[headers[i+1]] = [e.strip() for e in d[i+1].split(",") if len(e) > 0]
         characters[char] = char_dict
     return characters
 
