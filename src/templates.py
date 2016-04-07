@@ -150,6 +150,28 @@ CHARACTER_RELATIONSHIPS = [
     "#NAME2 always looked up to #NAME for #GPR #POS personality."
     ]
 
+ACTION_PAIRS_BUT = [
+    '#NAME #ACT #2NAME, but #GPR #2ACT #2NAME.',
+#    'As #PADJ as #NAME was #GPR #ACT #2NAME, but realizing what #GPR had '+
+#    ' done #GPR #2ACT #2NAME.',
+    ]
+
+ACTION_PAIRS_AND = [
+    '#NAME #ACT #2NAME, and #GPR #2ACT #2NAME.',
+    ]
+
+ACTION_PAIRS_BECAUSE = [
+    '#NAME #ACT #2NAME, because #NAME #2ACT #2NAME.',
+    ]
+
+ACTION_PAIRS_YET = [
+    '#NAME #ACT #2NAME, yet #NAME #2ACT #2NAME.',
+    ]
+
+ACTION_PAIRS_SO = [
+    '#NAME #ACT #2NAME, so #NAME #2ACT #2NAME.',
+    ]
+
 SETTING_DESCRIPTIONS = [
     "#PREP #DET #AMB #LOC, #NAME waited for #NAME2. #GPR knew #NAME2 would be coming, because #GPR always came at this time.",
     "#Name looked around the #NEG_AMB #LOC, wondering how #GPR had ended up here.",

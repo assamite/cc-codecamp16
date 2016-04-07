@@ -31,6 +31,7 @@ def action_list(G, midpoint, initials, closings):
         raise ValueError("No such midpoint before in graph")
     if midpoint[2] not in nodes:
         raise ValueError("No such midpoint after in graph")
+    print midpoint
     before = midpoint[0]
     after = midpoint [2]
     action_list = []
@@ -57,6 +58,14 @@ def action_list(G, midpoint, initials, closings):
     start = choice(starting_paths)
     ending = choice(ending_paths)
     return start + [midpoint[1]] + ending
+
+def get_links(G, action_list):
+    links = []
+    for i,a in enumerate(action_list[:-1]):
+        data = G.get_edge_data(a, action_list[i+1])
+        link = data['link']
+        links.append(link)
+    return links
 
 if __name__ == "__main__":
     import parse

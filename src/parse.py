@@ -9,6 +9,7 @@ midpoints_path = "../data/Veale's script midpoints.csv"
 initials_path = "../data/Veale's initial bookend actions.csv"
 closings_path = "../data/Veale's closing bookend actions.csv"
 NOC_path = "../data/Veale's The NOC List.csv"
+exemplars_path = "../data/character_typical_exemplars_2.tsv"
 
 def parse_pairs(tsv_path=action_pairs_path):
     '''Parse action pairs (csv). Returns dictionary with keys 'pairs' and
@@ -35,11 +36,11 @@ def parse_midpoints(tsv_path=midpoints_path):
     dict['chains'] = []
     dict['exemplars'] = []
     for d in data:
-        b,m,a,e = d
+        b,m,a,f = d
         bs = [e.strip() for e in b.strip().split(",") if len(e) > 0]
         ms = [e.strip() for e in m.strip().split(",") if len(e) > 0]
         al = [e.strip() for e in a.strip().split(",") if len(e) > 0]
-        es = tuple(e.strip().split(":"))
+        es = tuple(f.strip().split(":"))
         # All combinations for chains
         chains = list(itertools.product(bs,ms,al))
         for c in chains:
@@ -61,7 +62,7 @@ def parse_initials(tsv_path=initials_path):
 
 
 def parse_closings(tsv_path=closings_path):
-    lines = [l.strip().split("\t") for l in open(tsv_path).readlines()]
+    lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
     # After line 244 the closings are not in the same format.
     headers, data = lines[0], lines[1:244]
     actions = []
@@ -74,7 +75,7 @@ def parse_closings(tsv_path=closings_path):
 
 
 def parse_NOC(tsv_path=NOC_path):
-    lines = [l.strip().split("\t") for l in open(tsv_path).readlines()]
+    lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
     headers, data = lines[0], lines[1:]
     #print headers
     characters = {}
@@ -101,5 +102,16 @@ def parse_NOC(tsv_path=NOC_path):
         for i in range(len(d)):
             char_dict[headers[i]] = [e.strip() for e in d[i].split(",") if len(e) > 0]
         characters[char] = char_dict
+    return characters
+
+
+def parse_exemplars(tsv_path=exemplars_path):
+    lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
+    data = lines
+    characters = {}
+    for d in data:
+        characters[d[0]] = {}
+        characters[d[0]]['most'] = [e.strip().lower() for e in d[1].split(",") if len(e) > 0]
+        characters[d[0]]['least'] = [e.strip().lower() for e in d[2].split(",") if len(e) > 0]
     return characters
 
