@@ -8,6 +8,7 @@ Templates for different types of sentences.
 #NEG = negative talking point or trait
 #GNN = gender noun
 #PNR = Gender reflexive pronoun 
+#GPN = Gender possessive pronoun
 #LOC = setting/location
 #DET = determiner
 #AMB = ambience
@@ -23,6 +24,8 @@ character reactions and thoughts that make sense in terms of them.
 GPR = {'male': 'he', 'female': 'she'}
 GNN = {'male': 'man', 'female': 'woman'}
 PNR = {'male': 'himself', 'female': 'herself'}
+GPN = {'male': 'his', 'female': 'her'}
+GPS = {'male': 'him', 'female': 'her'}
 
 POS = [
     "great",
@@ -133,13 +136,13 @@ NEG = [
     ]
 
 CHARACTER_DESCRIPTIONS = [
-    "#NAME was #POS as #GPR was #POS.",
-    "#NAME was #NEG as #GPR was #NEG.",
+    "#NAME was as #POS as #GPR was #POS.",
+    "#NAME was as #NEG as #GPR was #NEG.",
     "#NAME, a #POS and #POS #GNN, had a knack for getting people to do things.",
     "#NAME, as a #NEG #GNN, often got what #GPR wanted.",
-    "A #POS #GNN, #NAME was widely respected in #GPR social circles.",
-    "Even #NAME’s closest acquaintances steered clear of #GPR because they knew what a #NEG #GNN #GPR was.",
-    "#NAME, who appeared #POS and #POS, occasionally slipped up and let people see #GPR #NEG side.",
+    "A #POS #GNN, #NAME was widely respected in #GPN social circles.",
+    "Even #NAME's closest acquaintances steered clear of #GPS because they knew what a #NEG #GNN #GPR was.",
+    "#NAME, who appeared #POS and #POS, occasionally slipped up and let people see #GPN #NEG side.",
     ]
 
 CHARACTER_RELATIONSHIPS = [
@@ -150,9 +153,9 @@ CHARACTER_RELATIONSHIPS = [
 SETTING_DESCRIPTIONS = [
     "#PREP #DET #AMB #LOC, #NAME waited for #NAME2. #GPR knew #NAME2 would be coming, because #GPR always came at this time.",
     "#Name looked around the #NEG_AMB #LOC, wondering how #GPR had ended up here.",
-    "The #POS_LOC was #POS_AMB and #POS_AMB, causing a smile to light #NAME’s face.",
+    "The #POS_LOC was #POS_AMB and #POS_AMB, causing a smile to light #NAME's face.",
     "#NAME began to feel weary while looking around the #NEG_AMB, #NEG_AMB #NEG_LOC.",
-    "AS #NAME entered the #POS_LOC, #GPR was struck by the sound of children’s laughter filling the air.",
+    "AS #NAME entered the #POS_LOC, #GPR was struck by the sound of children's laughter filling the air.",
     "The #NEG_AMB #NEG_LOC made #NAME uncomfortable, but #GPR had no option but to stay there.",
     "The #POS_LOC always reminded #NAME of home because of how #POS_AMB and #POS_AMB it was.",
     "The #NEG_LOC #NAME found #PNR in was #NEG_AMB and #NEG_AMB.",
