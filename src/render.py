@@ -3,5 +3,7 @@ Rendering functions for templates.
 '''
 
 mappings = {
-    '#POS':         
+    '#POS': "Positive Talking Points",
+    '#NEG': "Negative Talking Points",
+    '#GDR': 
     }
