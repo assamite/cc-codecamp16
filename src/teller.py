@@ -6,6 +6,9 @@ import render
 import parse
 
 from random import choice, randint
+from GS import GS, Word2Vec
+from collections import defaultdict
+
 
 class StoryTeller():
 
@@ -24,6 +27,12 @@ class StoryTeller():
                                              self.action_pairs['links'])
         self.idiomatics = parse.parse_idiomatics()
         self.locations = parse.parse_locations()
+        self.character_properties = parse.parse_character_properties()
+
+        try:
+            self.gs = GS(Word2Vec.load("../data/word2vec/w2v_103.model"))
+        except:
+            pass
 
     def tell(self, *args, **kwargs):
         '''Tell a story.
@@ -147,7 +156,27 @@ class StoryTeller():
         return all_plots[0]
 
     def evaluate_plot(self, actor1, actor2, action_list, links):
-        return 1
+
+        character_properties_1 = self.character_properties[actor1]
+        character_properties_2 = self.character_properties[actor2]
+
+        character_properties_1 = list(set(map(lambda (p, v): p, character_properties_1)))
+        character_properties_2 = list(set(map(lambda (p, v): p, character_properties_2)))
+        character_similarities = self.gs.sim_score_stringlists(" ".join(character_properties_1), " ".join(character_properties_2))
+
+        story_length = len(action_list) # the length of the story
+
+        links_portions = defaultdict(float)
+        for l in links:
+            links_portions[l] += 1.0
+        links_portions = map(lambda p: float(p)/story_length, links_portions.values())
+        max_links_portion = max(links_portions)
+
+        evaluation = 0.0
+        evaluation += (1.0 - character_similarities) # the lower the better
+        evaluation += (1.0 if story_length >= 4 and story_length <= 12 else 0.0)
+        evaluation += (1.0 - max_links_portion)
+        return evaluation
 
     def get_characters_and_actions(self, *args, **kwargs):
         '''Dummy.'''

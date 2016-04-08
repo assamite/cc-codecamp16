@@ -12,6 +12,8 @@ NOC_path = "../data/Veale's The NOC List.csv"
 exemplars_path = "../data/character_typical_exemplars_2.tsv"
 locations_path = "../data/Veale's location listing.csv"
 idiomatics_path = "../data/Veale's idiomatic actions.csv"
+character_properties_path = "../data/character_properties.tsv"
+
 
 def parse_pairs(tsv_path=action_pairs_path):
     '''Parse action pairs (csv). Returns dictionary with keys 'pairs' and
@@ -21,7 +23,7 @@ def parse_pairs(tsv_path=action_pairs_path):
     lines = [l.strip().split("\t") for l in open(tsv_path).readlines()]
     headers, data = lines[0], lines[1:]
     dict = {}
-    dict['pairs'] = [(d[1],d[3]) for d in data]
+    dict['pairs'] = [(d[1], d[3]) for d in data]
     dict['links'] = [d[2] for d in data]
     return dict
 
@@ -38,13 +40,13 @@ def parse_midpoints(tsv_path=midpoints_path):
     dict['chains'] = []
     dict['exemplars'] = []
     for d in data:
-        b,m,a,f = d
+        b, m, a, f = d
         bs = [e.strip() for e in b.strip().split(",") if len(e) > 0]
         ms = [e.strip() for e in m.strip().split(",") if len(e) > 0]
         al = [e.strip() for e in a.strip().split(",") if len(e) > 0]
         es = tuple(f.strip().split(":"))
         # All combinations for chains
-        chains = list(itertools.product(bs,ms,al))
+        chains = list(itertools.product(bs, ms, al))
         for c in chains:
             dict['chains'].append(c)
             dict['exemplars'].append(es)
@@ -81,7 +83,7 @@ def parse_closings(tsv_path=closings_path):
 def parse_NOC(tsv_path=NOC_path):
     lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
     headers, data = lines[0], lines[1:]
-    #print headers
+    # print headers
     characters = {}
     for d in data:
         char_dict = {"Character": [],
@@ -90,7 +92,7 @@ def parse_NOC(tsv_path=NOC_path):
                      "Address 1": [],
                      "Address 2": [],
                      "Address 3": [],
-                     "Politics": [], 
+                     "Politics": [],
                      "Marital Status": [],
                      "Opponent": [],
                      "Typical Activity": [],
@@ -98,10 +100,10 @@ def parse_NOC(tsv_path=NOC_path):
                      "Weapon of Choice": [],
                      "Seen Wearing": [],
                      "Domains": [],
-                     #Genres    Fictive Status    Portrayed By    Creator    Creation    Group Affiliation    Fictional World    Category    
+                     # Genres    Fictive Status    Portrayed By    Creator    Creation    Group Affiliation    Fictional World    Category
                      'Negative Talking Points': [],
                      "Positive Talking Points": [],
-                    }
+                     }
         char = d[0]
         for i in range(len(d)):
             char_dict[headers[i]] = [e.strip() for e in d[i].split(",") if len(e) > 0]
@@ -118,6 +120,16 @@ def parse_exemplars(tsv_path=exemplars_path):
         characters[d[0]]['most'] = [e.strip().lower() for e in d[1].split(",") if len(e) > 0]
         characters[d[0]]['least'] = [e.strip().lower() for e in d[2].split(",") if len(e) > 0]
     return characters
+
+
+def parse_character_properties(tsv_path=character_properties_path):
+    lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
+    data = lines
+    characters = {}
+    for d in data:
+        characters[d[0]] = [tuple(e.strip().lower().split(':')) for e in d[1].split(",") if len(e) > 0]
+    return characters
+
 
 def parse_idiomatics(tsv_path=idiomatics_path):
     lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
@@ -150,5 +162,3 @@ def parse_locations(tsv_path=locations_path):
                 loc[headers[i]] = [e.strip() for e in splitted if len(e) > 0]
         locations[key] = loc
     return locations
-
-
