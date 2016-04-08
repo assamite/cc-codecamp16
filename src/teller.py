@@ -29,7 +29,7 @@ class StoryTeller():
         action_list, actor1, actor2 = self.select_midpoint(*args, **kwargs)
         print action_list
         links = graph.get_links(self.action_graph, action_list)
-        
+
         for i in range(len(action_list[:-1])):
             print "{} {} {}".format(actor1, action_list[i], actor2)
             print "{}".format(links[i])
