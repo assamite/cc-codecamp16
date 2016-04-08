@@ -4,9 +4,16 @@ Main module to put everything together.
 import graph
 import render
 import parse
+import templates
 
 from random import choice, randint
+<<<<<<< HEAD
 import re
+=======
+from GS import GS, Word2Vec
+from collections import defaultdict
+
+>>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
 
 class StoryTeller():
 
@@ -25,6 +32,20 @@ class StoryTeller():
                                              self.action_pairs['links'])
         self.idiomatics = parse.parse_idiomatics()
         self.locations = parse.parse_locations()
+        self.character_templates = templates.CHARACTER_DESCRIPTIONS
+        self.location_templates = templates.SETTING_DESCRIPTIONS
+        self.character_properties = parse.parse_character_properties()
+
+        try:
+            self.gs = GS(Word2Vec.load("../data/word2vec/w2v_103.model"))
+        except:
+            pass
+
+        #try:
+        #    self.gs = GS(Word2Vec.load("/Users/pihatonttu/nltk_data/gensim/googlenews_gensim_v2w.model"))
+        #except:
+        #    pass
+
 
     def tell(self, *args, **kwargs):
         '''Tell a story.
@@ -77,16 +98,21 @@ class StoryTeller():
             opening_link = story['opening'][0]
             opening_sentences = story['opening'][1]
             idi = choice(self.idiomatics[opening_sentences[0]])
-            sentence = idi.replace('A', actor1)
-            sentence = sentence.replace('B', actor2)
+            sentence = idi.replace('#A', actor1)
+            sentence = sentence.replace('#B', actor2)
             opening_sents.append('{}'.format(sentence))
             if opening_link in comma_triggers:
                 opening_sents.append(', {} '.format(opening_link))
             else:
                 opening_sents.append(' {} '.format(opening_link))
             idi = choice(self.idiomatics[opening_sentences[1]])
+<<<<<<< HEAD
             sentence = idi.replace('A', actor1_can_refs_dict['surname'])
             sentence = sentence.replace('B', actor2_can_refs_dict['surname'])
+=======
+            sentence = idi.replace('#A', actor1)
+            sentence = sentence.replace('#B', actor2)            
+>>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
             opening_sents.append('{}. '.format(sentence))
             res['opening'] = opening_sents
 
@@ -102,11 +128,16 @@ class StoryTeller():
             #Begin formatting rest of middle section
             for n,(lnk,sent) in enumerate(rest_middle[:-1]):
                 idi = choice(self.idiomatics[sent])
+<<<<<<< HEAD
                 sentence = idi.replace('A', actor1)
                 sentence = sentence.replace('B', actor2)
                 #Pick alternative sentence starter
                 if lnk in sent_starters.keys():
                     alt_sent_starter = choice(sent_starters[lnk]).capitalize()
+=======
+                sentence = idi.replace('#A', actor1)
+                sentence = sentence.replace('#B', actor2)
+>>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
                 #Skip the final link.
                 if n==len(rest_middle[:-1])-1:
                     middle_sents.append("{}".format(sentence))
@@ -149,13 +180,13 @@ class StoryTeller():
             if middle_end_lnk in sent_starters.keys():
                 middle_sents.append('. {}, '.format(choice(sent_starters[middle_end_lnk]).capitalize()))
                 idi = choice(self.idiomatics[middle_end_sent])
-                sentence = idi.replace('A', actor1)
-                sentence = sentence.replace('B', actor2)
+                sentence = idi.replace('#A', actor1)
+                sentence = sentence.replace('#B', actor2)
                 middle_sents.append('{}. '.format(sentence))
             else:
                 idi = choice(self.idiomatics[middle_end_sent])
-                sentence = idi.replace('A', actor1)
-                sentence = sentence.replace('B', actor2)
+                sentence = idi.replace('#A', actor1)
+                sentence = sentence.replace('#B', actor2)
                 middle_sents.append('. {}. '.format(sentence))
 
             middle_sents = finalcheck_conjoined_sents(middle_sents, actor1, actor2)
@@ -165,8 +196,13 @@ class StoryTeller():
             #Construct closing
             closing_sents = []
             idi = choice(self.idiomatics[story_bundle['closing']])
+<<<<<<< HEAD
             sentence = idi.replace('A', actor1_can_refs_dict['surname'])
             sentence = sentence.replace('B', actor2_can_refs_dict['surname'])
+=======
+            sentence = idi.replace('#A', actor1)
+            sentence = sentence.replace('#B', actor2)
+>>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
             closing_sents.append('{}.'.format(sentence))
             res['closing'] = closing_sents
 
@@ -175,6 +211,10 @@ class StoryTeller():
 
         plot = self.generate_plot(plots=20)
         actor1, actor2, action_list, links, evaluation = plot
+        # Select location on random for now
+        location = choice(self.locations.values())
+        setting_sentence = render.get_location_desc(self.noc[actor1], self.noc[actor2],
+                                                    location, self.location_templates)
 
         story_bundle =  {
                         'opening': (links[0], action_list[:2]),
@@ -189,9 +229,16 @@ class StoryTeller():
         linearized_story = linearize(story_bundle, actor1, actor2)
 
         #Format story
+<<<<<<< HEAD
         print ''.join(linearized_story['opening'])
         print ''.join(linearized_story['middle'])
         print ''.join(linearized_story['closing'])
+=======
+        print setting_sentence
+        print ''.join(linearize(story_bundle, actor1, actor2)['opening'])
+        print ''.join(linearize(story_bundle, actor1, actor2)['middle'])
+        print ''.join(linearize(story_bundle, actor1, actor2)['closing'])
+>>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
 
         #for i in range(len(action_list[:-1])):
         #    print "{} {} {}".format(actor1, action_list[i], actor2)
@@ -213,7 +260,26 @@ class StoryTeller():
         return all_plots[0]
 
     def evaluate_plot(self, actor1, actor2, action_list, links):
-        return 1
+        character_properties_1 = self.character_properties[actor1]
+        character_properties_2 = self.character_properties[actor2]
+
+        character_properties_1 = list(set(map(lambda (p, v): p, character_properties_1)))
+        character_properties_2 = list(set(map(lambda (p, v): p, character_properties_2)))
+        character_similarities = self.gs.sim_score_stringlists(" ".join(character_properties_1), " ".join(character_properties_2))
+
+        story_length = len(action_list) # the length of the story
+
+        links_portions = defaultdict(float)
+        for l in links:
+            links_portions[l] += 1.0
+        links_portions = map(lambda p: float(p)/story_length, links_portions.values())
+        max_links_portion = max(links_portions)
+
+        evaluation = 0.0
+        evaluation += (1.0 - character_similarities) # the lower the better
+        evaluation += (1.0 if story_length >= 4 and story_length <= 12 else 0.0)
+        evaluation += (1.0 - max_links_portion)
+        return evaluation
 
     def get_characters_and_actions(self, *args, **kwargs):
         '''Dummy.'''

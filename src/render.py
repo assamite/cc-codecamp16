@@ -35,7 +35,7 @@ def get_char_template(character, templates):
     return choice(possible_templates)
 
 
-def render_gender(character, tmpl):
+def render_gender(character, tmpl, character2=None):
     gender = character['Gender'][0]
     rendered = tmpl
     rendered = rendered.replace('#GPR', templates.GPR[gender])
@@ -43,6 +43,13 @@ def render_gender(character, tmpl):
     rendered = rendered.replace('#GPN', templates.GPN[gender])
     rendered = rendered.replace('#PNR', templates.PNR[gender])
     rendered = rendered.replace('#GPS', templates.GPS[gender])
+    if character2 is not None:
+        gender = character2['Gender'][0]
+        rendered = rendered.replace('#NOP', templates.NOP[gender])
+        #rendered = rendered.replace('#GNN', templates.GNN[gender])
+        #rendered = rendered.replace('#GPN', templates.GPN[gender])
+        #rendered = rendered.replace('#PNR', templates.PNR[gender])
+        #rendered = rendered.replace('#GPS', templates.GPS[gender])
     return rendered
 
 
@@ -60,6 +67,51 @@ def render_char_desc(character, tmpl):
             rendered = rendered.replace(e[0], var, 1)
     rendered = render_gender(character, rendered)
     return rendered
+
+
+def get_location_template(loc, templates):
+    possible_templates = []
+    mood = loc['Mood']
+    for e in templates:
+        if '#NEUT_LOC' in e and mood == 'NEUT':
+            possible_templates.append(e)
+        if '#POS_LOC' in e and mood == 'POS':
+            possible_templates.append(e)
+        if '#NEG_LOC' in e and mood == 'NEG':
+            possible_templates.append(e)
+    return choice(possible_templates)
+
+
+def render_location_desc(char1, char2, location, tmpl):
+    
+    mood = location['Mood']
+    loc = location['Location']
+    det = location['Determiner']
+    prep = location['Preposition']
+    amb = choice(location['Ambience'])
+    n1 = char1['Character'][0]
+    n2 = char2['Character'][0]
+
+    rendered = tmpl
+    rendered = rendered.replace('#DET', det)
+    rendered = rendered.replace('#PREP', prep)
+    rendered = rendered.replace('#NAME', n1)
+    rendered = rendered.replace('#NOM', n2)
+    if mood == 'NEUT':
+        rendered = rendered.replace('#NEUT_LOC', loc)
+        rendered = rendered.replace('#NEUT_AMB', amb)
+    if mood == 'POS':
+        rendered = rendered.replace('#POS_LOC', loc)
+        rendered = rendered.replace('#POS_AMB', amb)
+    if mood == 'NEG':
+        rendered = rendered.replace('#NEG_LOC', loc)
+        rendered = rendered.replace('#NEG_AMB', amb)
+    rendered = render_gender(char1, rendered, char2)
+    return rendered
+
+def get_location_desc(char1, char2, location, templates):
+    tmpl = get_location_template(location, templates)
+    return render_location_desc(char1, char2, location, tmpl)
 
 def simplepastify(in_string):
     '''

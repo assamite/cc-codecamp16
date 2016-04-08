@@ -66,7 +66,6 @@ def get_links(G, action_list):
     links = []
     for i,a in enumerate(action_list[:-1]):
         data = G.get_edge_data(a, action_list[i+1])
-        
         link = data['link']
         links.append(link)
     return links
