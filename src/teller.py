@@ -31,6 +31,10 @@ class StoryTeller():
             '''
             (1) Order elements of surface sentence.
             (2) Add punctuation to surface sentence.
+
+            Returns dictionary with:
+            * Keys: labels for each section
+            * Values: links & sentences, which have been linearized & punctuated
             '''
             res = {}
             comma_triggers = ['yet']
@@ -94,8 +98,8 @@ class StoryTeller():
         links = graph.get_links(self.action_graph, action_list)
 
         story_bundle =  {
-                        'opening': (links[0], action_list[:2]),#(links[0:2], action_list[:2]),
-                        'middle': (links[1],zip(links[2:-1], action_list[2:-1])),#zip(links[2:-1], action_list[2:-1]),
+                        'opening': (links[0], action_list[:2]),
+                        'middle': (links[1],zip(links[2:-1], action_list[2:-1])),
                         'closing': action_list[-1]
                         }
 
