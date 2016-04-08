@@ -119,7 +119,9 @@ class StoryTeller():
         plot = self.generate_plot(plots=20)
         actor1, actor2, action_list, links, evaluation = plot
         # Select location on random for now
-        location = choice(self.locations)
+        location = choice(self.locations.values())
+        setting_sentence = render.get_location_desc(self.noc[actor1], self.noc[actor2],
+                                                    location, self.location_templates)
 
         story_bundle =  {
                         'opening': (links[0], action_list[:2]),
@@ -128,6 +130,7 @@ class StoryTeller():
                         }
 
         #Format story
+        print setting_sentence
         print ''.join(linearize(story_bundle, actor1, actor2)['opening'])
         print ''.join(linearize(story_bundle, actor1, actor2)['middle'])
         print ''.join(linearize(story_bundle, actor1, actor2)['closing'])

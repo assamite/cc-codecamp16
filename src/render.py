@@ -97,7 +97,6 @@ def render_location_desc(char1, char2, location, tmpl):
     rendered = rendered.replace('#PREP', prep)
     rendered = rendered.replace('#NAME', n1)
     rendered = rendered.replace('#NOM', n2)
-    print mood
     if mood == 'NEUT':
         rendered = rendered.replace('#NEUT_LOC', loc)
         rendered = rendered.replace('#NEUT_AMB', amb)
@@ -111,7 +110,6 @@ def render_location_desc(char1, char2, location, tmpl):
     return rendered
 
 def get_location_desc(char1, char2, location, templates):
-    print location['Location']
     tmpl = get_location_template(location, templates)
     return render_location_desc(char1, char2, location, tmpl)
 
