@@ -33,7 +33,7 @@ class StoryTeller():
             (2) Add punctuation to surface sentence.
 
             Returns dictionary with:
-            * Keys: labels for each section
+            * Keys: labels for each section ('opening', 'middle', 'closing')
             * Values: links & sentences, which have been linearized & punctuated
             '''
             res = {}
@@ -75,7 +75,7 @@ class StoryTeller():
                     middle_sents.append('. {} '.format(lnk.capitalize()))
                 else:
                     middle_sents.append(' {} '.format(lnk))
-            #Deal with the final links, sentences of middle
+            #Deal with the final links and sentences of middle section
             middle_end_lnk = rest_middle[-1][0]
             middle_end_sent = rest_middle[-1][1]
             if middle_end_lnk in sent_starters:
@@ -103,10 +103,16 @@ class StoryTeller():
                         'closing': action_list[-1]
                         }
 
+        #Linearize story
+        ##TODO: there's a bug where this won't work for stories of less than 4 sentences
+        ##The problem is that this leads to a link being stranded at the beginning of the
+        ##middle section, e.g. 'So .'
+        linearized_story = linearize(story_bundle, actor1, actor2)
+
         #Format story
-        print ''.join(linearize(story_bundle, actor1, actor2)['opening'])
-        print ''.join(linearize(story_bundle, actor1, actor2)['middle'])
-        print ''.join(linearize(story_bundle, actor1, actor2)['closing'])
+        print ''.join(linearized_story['opening'])
+        print ''.join(linearized_story['middle'])
+        print ''.join(linearized_story['closing'])
 
         #for i in range(len(action_list[:-1])):
         #    print "{} {} {}".format(actor1, action_list[i], actor2)
