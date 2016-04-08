@@ -22,6 +22,8 @@ class StoryTeller():
         self.exemplars = parse.parse_exemplars()
         self.action_graph = graph.make_graph(self.action_pairs['pairs'],
                                              self.action_pairs['links'])
+        self.idiomatics = parse.parse_idiomatics()
+        self.locations = parse.parse_locations()
 
     def tell(self, *args, **kwargs):
         '''Tell a story.
@@ -45,12 +47,18 @@ class StoryTeller():
             opening_sents = []
             opening_link = story['opening'][0]
             opening_sentences = story['opening'][1]
-            opening_sents.append('{} {} {}'.format(actor1, opening_sentences[0], actor2))
+            idi = choice(self.idiomatics[opening_sentences[0]])
+            sentence = idi.replace('A', actor1)
+            sentence = sentence.replace('B', actor2)
+            opening_sents.append('{}'.format(sentence))
             if opening_link in comma_triggers:
                 opening_sents.append(', {} '.format(opening_link))
             else:
                 opening_sents.append(' {} '.format(opening_link))
-            opening_sents.append('{} {} {}. '.format(actor1, opening_sentences[1], actor2))
+            idi = choice(self.idiomatics[opening_sentences[1]])
+            sentence = idi.replace('A', actor1)
+            sentence = sentence.replace('B', actor2)            
+            opening_sents.append('{}. '.format(sentence))
             res['opening'] = opening_sents
 
             #Construct middle
@@ -64,11 +72,14 @@ class StoryTeller():
                 middle_sents.append('{} '.format(initial_link.capitalize()))
             #Begin formatting rest of middle
             for n,(lnk,sent) in enumerate(rest_middle[:-1]):
+                idi = choice(self.idiomatics[sent])
+                sentence = idi.replace('A', actor1)
+                sentence = sentence.replace('B', actor2)
                 #Skip the final link.
                 if n==len(rest_middle[:-1])-1:
-                    middle_sents.append("{} {} {}".format(actor1, sent, actor2))
+                    middle_sents.append("{}".format(sentence))
                     break
-                middle_sents.append('{} {} {}'.format(actor1, sent, actor2))
+                middle_sents.append('{}'.format(sentence))
                 if lnk in comma_triggers:
                     middle_sents.append(', {} '.format(lnk))
                 elif lnk in sent_starters:
@@ -80,22 +91,30 @@ class StoryTeller():
             middle_end_sent = rest_middle[-1][1]
             if middle_end_lnk in sent_starters:
                 middle_sents.append('. {} '.format(middle_end_lnk.capitalize()))
-                middle_sents.append('{} {} {}. '.format(actor1, middle_end_sent, actor2))
+                idi = choice(self.idiomatics[middle_end_sent])
+                sentence = idi.replace('A', actor1)
+                sentence = sentence.replace('B', actor2)
+                middle_sents.append('{}. '.format(sentence))
             else:
-                middle_sents.append('. {} {} {}. '.format(actor1, middle_end_sent, actor2))
+                idi = choice(self.idiomatics[middle_end_sent])
+                sentence = idi.replace('A', actor1)
+                sentence = sentence.replace('B', actor2)
+                middle_sents.append('. {}. '.format(sentence))
             res['middle'] = middle_sents
 
             #Construct closing
             closing_sents = []
-            closing_sents.append('{} {} {}.'.format(actor1, story_bundle['closing'], actor2))
+            idi = choice(self.idiomatics[story_bundle['closing']])
+            sentence = idi.replace('A', actor1)
+            sentence = sentence.replace('B', actor2)
+            closing_sents.append('{}.'.format(sentence))
             res['closing'] = closing_sents
 
             return res
 
 
-        action_list, actor1, actor2 = self.select_midpoint(*args, **kwargs)
-        print action_list
-        links = graph.get_links(self.action_graph, action_list)
+        plot = self.generate_plot(plots=20)
+        actor1, actor2, action_list, links, evaluation = plot
 
         story_bundle =  {
                         'opening': (links[0], action_list[:2]),
@@ -119,14 +138,34 @@ class StoryTeller():
         #    print "{}".format(links[i])
         #print "{} {} {}".format(actor1, action_list[-1], actor2)
 
-    def select_midpoint(self, *args, **kwargs):
+    def generate_plot(self, plots=100):
+        '''Use generate and test-method to select best possible plot and
+        character combination.
+        '''
+        all_plots = []
+        for i in range(plots):
+            action_list, actor1, actor2 = self.get_characters_and_actions()
+            links = graph.get_links(self.action_graph, action_list)
+            evaluation = self.evaluate_plot(actor1, actor2,
+                                            action_list, links)
+            all_plots.append((actor1, actor2, action_list, links, evaluation))
+        all_plots.sort(key=lambda x: x[4], reverse=True)
+        return all_plots[0]
+
+    def evaluate_plot(self, actor1, actor2, action_list, links):
+        return 1
+
+    def get_characters_and_actions(self, *args, **kwargs):
         '''Dummy.'''
         suitable = False
         while not suitable:
             r = randint(0, len(self.midpoints))
             midpoint = self.midpoints[r]
-            ac = graph.action_list(self.action_graph, midpoint,
-                                   self.I, self.C)
+            try:
+                ac = graph.action_list(self.action_graph, midpoint,
+                                       self.I, self.C)
+            except:
+                ac = None
             if ac is not None:
                 actor1, actor2 = self.select_actors(self.midpoint_ex[r])
                 if actor1 is not None and actor2 is not None:
@@ -135,9 +174,17 @@ class StoryTeller():
 
     def select_actors(self, exemplars):
         actor1 = self.select_actor(exemplars[0])
+        if actor1 == None:
+            return None, None
         actor2 = self.select_actor(exemplars[1])
+        if actor2 == None:
+            return None, None
+        i = 0
         while actor1 == actor2:
             actor2 = self.select_actor(exemplars[1])
+            i = i + 1
+            if i >= 10:
+                return None, None
         return actor1, actor2
 
     def select_actor(self, exemplar):
@@ -148,6 +195,7 @@ class StoryTeller():
         if len(possible_characters) == 0:
             return None
         return choice(possible_characters)
+
 
 if __name__ == "__main__":
     st = StoryTeller()

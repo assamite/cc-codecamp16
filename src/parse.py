@@ -10,6 +10,8 @@ initials_path = "../data/Veale's initial bookend actions.csv"
 closings_path = "../data/Veale's closing bookend actions.csv"
 NOC_path = "../data/Veale's The NOC List.csv"
 exemplars_path = "../data/character_typical_exemplars_2.tsv"
+locations_path = "../data/Veale's location listing.csv"
+idiomatics_path = "../data/Veale's idiomatic actions.csv"
 
 def parse_pairs(tsv_path=action_pairs_path):
     '''Parse action pairs (csv). Returns dictionary with keys 'pairs' and
@@ -67,6 +69,8 @@ def parse_closings(tsv_path=closings_path):
     headers, data = lines[0], lines[1:244]
     actions = []
     for d in data:
+        if len(d) != 3:
+            continue
         closing = [d[0]]
         representations = [e.strip() for e in d[2].split(",") if len(e) > 0]
         mappings = list(itertools.product(closing, representations))
@@ -114,4 +118,37 @@ def parse_exemplars(tsv_path=exemplars_path):
         characters[d[0]]['most'] = [e.strip().lower() for e in d[1].split(",") if len(e) > 0]
         characters[d[0]]['least'] = [e.strip().lower() for e in d[2].split(",") if len(e) > 0]
     return characters
+
+def parse_idiomatics(tsv_path=idiomatics_path):
+    lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
+    headers, data = lines[0], lines[1:]
+    actions = {}
+    for d in data:
+        action = d[0]
+        idiomatics = [e.strip() for e in d[3].split(",") if len(e) > 0]
+        actions[action] = idiomatics
+    return actions
+
+
+def parse_locations(tsv_path=locations_path):
+    lines = [l.strip("\n").split("\t") for l in open(tsv_path).readlines()]
+    headers, data = lines[0], lines[1:]
+    locations = {}
+    for d in data:
+        loc = {'Location': '',
+               'Mood': '',
+               'Determiner': '',
+               'Preposition': '',
+               'Ambience': []
+               }
+        key = d[0]
+        for i in range(len(d)):
+            splitted = d[i].split(",")
+            if len(splitted) == 1:
+                loc[headers[i]] = splitted[0].strip()
+            else:
+                loc[headers[i]] = [e.strip() for e in splitted if len(e) > 0]
+        locations[key] = loc
+    return locations
+
 

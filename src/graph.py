@@ -31,8 +31,8 @@ def action_list(G, midpoint, initials, closings):
         raise ValueError("No such midpoint before in graph")
     if midpoint[2] not in nodes:
         raise ValueError("No such midpoint after in graph")
-    print midpoint
     before = midpoint[0]
+    mp = midpoint[1]
     after = midpoint [2]
     action_list = []
     starting_paths = []
@@ -46,6 +46,9 @@ def action_list(G, midpoint, initials, closings):
     if len(starting_paths) == 0:
         return []
 
+    bmp = nx.shortest_path(G, before, mp)
+    amp = nx.shortest_path(G, mp, after)
+
     for clo in closings:
         if clo not in nodes:
             continue
@@ -57,12 +60,13 @@ def action_list(G, midpoint, initials, closings):
 
     start = choice(starting_paths)
     ending = choice(ending_paths)
-    return start + [midpoint[1]] + ending
+    return start + bmp[1:-1] + [mp] + amp[1:-1] + ending
 
 def get_links(G, action_list):
     links = []
     for i,a in enumerate(action_list[:-1]):
         data = G.get_edge_data(a, action_list[i+1])
+        
         link = data['link']
         links.append(link)
     return links
@@ -71,6 +75,7 @@ if __name__ == "__main__":
     import parse
     d = parse.parse_pairs()
     G = make_graph(d['pairs'], d['links'])
+    print nx.has_path(G, 'are_marketed_by', 'take_advantage_of')
     M = parse.parse_midpoints()
     chains = M['chains']
     I = parse.parse_initials()
@@ -79,10 +84,6 @@ if __name__ == "__main__":
     closings = list(set([c[0] for c in C]))
     nodes = G.nodes()
 
-    for e in range(20):
-        midpoint = choice(chains)
-        acl = action_list(G, midpoint, initials, closings)
-        print midpoint, acl
     '''
     midb = list(set([e[0] for e in chains]))
     mida = list(set([e[2] for e in chains]))
