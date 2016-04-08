@@ -32,49 +32,59 @@ class StoryTeller():
             (1) Order elements of surface sentence.
             (2) Add punctuation to surface sentence.
             '''
-            res = ''
+            res = {}
             comma_triggers = ['yet']
             ignore_at_sentence_start = ['and', 'but']
             sent_starters = ['so', 'but']
 
             #Construct opening
-            opening_link1 = story['opening'][0][0]
-            opening_link2 = story['opening'][0][1]
+            opening_sents = []
+            opening_link = story['opening'][0]
             opening_sentences = story['opening'][1]
-            res = '{} {} {}'.format(actor1, opening_sentences[0], actor2)
-            if opening_link1 in comma_triggers:
-                res = res+', {} '.format(opening_link1)
+            opening_sents.append('{} {} {}'.format(actor1, opening_sentences[0], actor2))
+            if opening_link in comma_triggers:
+                opening_sents.append(', {} '.format(opening_link))
             else:
-                res = res+' {} '.format(opening_link1)
-            res = res+'{} {} {}. '.format(actor1, opening_sentences[1], actor2)
-            if opening_link2 in ignore_at_sentence_start:
-                pass
-            else:
-                res = res+'{} '.format(opening_link2.capitalize())
+                opening_sents.append(' {} '.format(opening_link))
+            opening_sents.append('{} {} {}. '.format(actor1, opening_sentences[1], actor2))
+            res['opening'] = opening_sents
 
             #Construct middle
-            for n,(lnk,sent) in enumerate(story['middle'][:-1]):
-                #Skip the final link.
-                if n==len(story['middle'][:-1])-1:
-                    res = res+"{} {} {}".format(actor1, sent, actor2)
-                    break
-                res = res+"{} {} {}".format(actor1, sent, actor2)
-                if lnk in comma_triggers:
-                    res = res+', {} '.format(lnk)
-                elif lnk in sent_starters:
-                    res = res+'. {} '.format(lnk.capitalize())
-                else:
-                    res = res+' {} '.format(lnk)
-            middle_end_lnk = story['middle'][-1][0]
-            middle_end_sent = story['middle'][-1][1]
-            if middle_end_lnk in sent_starters:
-                res = res+'. {} '.format(middle_end_lnk.capitalize())
-                res = res+'{} {} {}. '.format(actor1, middle_end_sent, actor2)
+            middle_sents = []
+            initial_link = story['middle'][0]
+            rest_middle = story['middle'][1]
+            #Deal with optional initial link for middle
+            if initial_link in ignore_at_sentence_start:
+                pass
             else:
-                res = res+'. {} {} {}. '.format(actor1, middle_end_sent, actor2)
+                middle_sents.append('{} '.format(initial_link.capitalize()))
+            #Begin formatting rest of middle
+            for n,(lnk,sent) in enumerate(rest_middle[:-1]):
+                #Skip the final link.
+                if n==len(rest_middle[:-1])-1:
+                    middle_sents.append("{} {} {}".format(actor1, sent, actor2))
+                    break
+                middle_sents.append('{} {} {}'.format(actor1, sent, actor2))
+                if lnk in comma_triggers:
+                    middle_sents.append(', {} '.format(lnk))
+                elif lnk in sent_starters:
+                    middle_sents.append('. {} '.format(lnk.capitalize()))
+                else:
+                    middle_sents.append(' {} '.format(lnk))
+            #Deal with the final links, sentences of middle
+            middle_end_lnk = rest_middle[-1][0]
+            middle_end_sent = rest_middle[-1][1]
+            if middle_end_lnk in sent_starters:
+                middle_sents.append('. {} '.format(middle_end_lnk.capitalize()))
+                middle_sents.append('{} {} {}. '.format(actor1, middle_end_sent, actor2))
+            else:
+                middle_sents.append('. {} {} {}. '.format(actor1, middle_end_sent, actor2))
+            res['middle'] = middle_sents
 
             #Construct closing
-            res = res+'{} {} {}.'.format(actor1, story_bundle['closing'], actor2)
+            closing_sents = []
+            closing_sents.append('{} {} {}.'.format(actor1, story_bundle['closing'], actor2))
+            res['closing'] = closing_sents
 
             return res
 
@@ -84,12 +94,15 @@ class StoryTeller():
         links = graph.get_links(self.action_graph, action_list)
 
         story_bundle =  {
-                        'opening': (links[0:2], action_list[:2]),
-                        'middle': zip(links[2:-1], action_list[2:-1]),
+                        'opening': (links[0], action_list[:2]),#(links[0:2], action_list[:2]),
+                        'middle': (links[1],zip(links[2:-1], action_list[2:-1])),#zip(links[2:-1], action_list[2:-1]),
                         'closing': action_list[-1]
                         }
 
-        print linearize(story_bundle, actor1, actor2)
+        #Format story
+        print ''.join(linearize(story_bundle, actor1, actor2)['opening'])
+        print ''.join(linearize(story_bundle, actor1, actor2)['middle'])
+        print ''.join(linearize(story_bundle, actor1, actor2)['closing'])
 
         #for i in range(len(action_list[:-1])):
         #    print "{} {} {}".format(actor1, action_list[i], actor2)
