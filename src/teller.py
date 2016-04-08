@@ -7,13 +7,10 @@ import parse
 import templates
 
 from random import choice, randint
-<<<<<<< HEAD
+
 import re
-=======
 from GS import GS, Word2Vec
 from collections import defaultdict
-
->>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
 
 class StoryTeller():
 
@@ -106,13 +103,9 @@ class StoryTeller():
             else:
                 opening_sents.append(' {} '.format(opening_link))
             idi = choice(self.idiomatics[opening_sentences[1]])
-<<<<<<< HEAD
-            sentence = idi.replace('A', actor1_can_refs_dict['surname'])
-            sentence = sentence.replace('B', actor2_can_refs_dict['surname'])
-=======
-            sentence = idi.replace('#A', actor1)
-            sentence = sentence.replace('#B', actor2)            
->>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
+            sentence = idi.replace('#A', actor1_can_refs_dict['surname'])
+            sentence = sentence.replace('#B', actor2_can_refs_dict['surname'])
+
             opening_sents.append('{}. '.format(sentence))
             res['opening'] = opening_sents
 
@@ -128,16 +121,11 @@ class StoryTeller():
             #Begin formatting rest of middle section
             for n,(lnk,sent) in enumerate(rest_middle[:-1]):
                 idi = choice(self.idiomatics[sent])
-<<<<<<< HEAD
-                sentence = idi.replace('A', actor1)
-                sentence = sentence.replace('B', actor2)
+                sentence = idi.replace('#A', actor1)
+                sentence = sentence.replace('#B', actor2)
                 #Pick alternative sentence starter
                 if lnk in sent_starters.keys():
                     alt_sent_starter = choice(sent_starters[lnk]).capitalize()
-=======
-                sentence = idi.replace('#A', actor1)
-                sentence = sentence.replace('#B', actor2)
->>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
                 #Skip the final link.
                 if n==len(rest_middle[:-1])-1:
                     middle_sents.append("{}".format(sentence))
@@ -196,13 +184,9 @@ class StoryTeller():
             #Construct closing
             closing_sents = []
             idi = choice(self.idiomatics[story_bundle['closing']])
-<<<<<<< HEAD
-            sentence = idi.replace('A', actor1_can_refs_dict['surname'])
-            sentence = sentence.replace('B', actor2_can_refs_dict['surname'])
-=======
-            sentence = idi.replace('#A', actor1)
-            sentence = sentence.replace('#B', actor2)
->>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
+            sentence = idi.replace('#A', actor1_can_refs_dict['surname'])
+            sentence = sentence.replace('#B', actor2_can_refs_dict['surname'])
+
             closing_sents.append('{}.'.format(sentence))
             res['closing'] = closing_sents
 
@@ -229,16 +213,10 @@ class StoryTeller():
         linearized_story = linearize(story_bundle, actor1, actor2)
 
         #Format story
-<<<<<<< HEAD
-        print ''.join(linearized_story['opening'])
-        print ''.join(linearized_story['middle'])
-        print ''.join(linearized_story['closing'])
-=======
         print setting_sentence
         print ''.join(linearize(story_bundle, actor1, actor2)['opening'])
         print ''.join(linearize(story_bundle, actor1, actor2)['middle'])
         print ''.join(linearize(story_bundle, actor1, actor2)['closing'])
->>>>>>> 1cfe1a532f2129923caa10111c517a5722653de5
 
         #for i in range(len(action_list[:-1])):
         #    print "{} {} {}".format(actor1, action_list[i], actor2)
