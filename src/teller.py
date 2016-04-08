@@ -79,9 +79,8 @@ class StoryTeller():
             return res
 
 
-        action_list, actor1, actor2 = self.select_midpoint(*args, **kwargs)
-        print action_list
-        links = graph.get_links(self.action_graph, action_list)
+        plot = self.generate_plot(plots=20)
+        actor1, actor2, action_list, links, evaluation = plot
 
         story_bundle =  {
                         'opening': (links[0:2], action_list[:2]),
@@ -96,14 +95,34 @@ class StoryTeller():
         #    print "{}".format(links[i])
         #print "{} {} {}".format(actor1, action_list[-1], actor2)
 
-    def select_midpoint(self, *args, **kwargs):
+    def generate_plot(self, plots=100):
+        '''Use generate and test-method to select best possible plot and
+        character combination.
+        '''
+        all_plots = []
+        for i in range(plots):
+            action_list, actor1, actor2 = self.get_characters_and_actions()
+            links = graph.get_links(self.action_graph, action_list)
+            evaluation = self.evaluate_plot(actor1, actor2,
+                                            action_list, links)
+            all_plots.append((actor1, actor2, action_list, links, evaluation))
+        all_plots.sort(key=lambda x: x[4], reverse=True)
+        return all_plots[0]
+
+    def evaluate_plot(self, actor1, actor2, action_list, links):
+        return 1
+
+    def get_characters_and_actions(self, *args, **kwargs):
         '''Dummy.'''
         suitable = False
         while not suitable:
             r = randint(0, len(self.midpoints))
             midpoint = self.midpoints[r]
-            ac = graph.action_list(self.action_graph, midpoint,
-                                   self.I, self.C)
+            try:
+                ac = graph.action_list(self.action_graph, midpoint,
+                                       self.I, self.C)
+            except:
+                ac = None
             if ac is not None:
                 actor1, actor2 = self.select_actors(self.midpoint_ex[r])
                 if actor1 is not None and actor2 is not None:
@@ -112,9 +131,17 @@ class StoryTeller():
 
     def select_actors(self, exemplars):
         actor1 = self.select_actor(exemplars[0])
+        if actor1 == None:
+            return None, None
         actor2 = self.select_actor(exemplars[1])
+        if actor2 == None:
+            return None, None
+        i = 0
         while actor1 == actor2:
             actor2 = self.select_actor(exemplars[1])
+            i = i + 1
+            if i >= 10:
+                return None, None
         return actor1, actor2
 
     def select_actor(self, exemplar):
@@ -125,6 +152,7 @@ class StoryTeller():
         if len(possible_characters) == 0:
             return None
         return choice(possible_characters)
+
 
 if __name__ == "__main__":
     st = StoryTeller()
