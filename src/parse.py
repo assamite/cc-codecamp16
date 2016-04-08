@@ -67,6 +67,8 @@ def parse_closings(tsv_path=closings_path):
     headers, data = lines[0], lines[1:244]
     actions = []
     for d in data:
+        if len(d) != 3:
+            continue
         closing = [d[0]]
         representations = [e.strip() for e in d[2].split(",") if len(e) > 0]
         mappings = list(itertools.product(closing, representations))
