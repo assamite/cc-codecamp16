@@ -61,6 +61,9 @@ def render_char_desc(character, tmpl):
     rendered = render_gender(character, rendered)
     return rendered
 
+def render_location_desc(char1, char2, tmpl):
+    pass
+
 def simplepastify(in_string):
     '''
     params:
