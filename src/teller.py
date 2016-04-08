@@ -22,6 +22,8 @@ class StoryTeller():
         self.exemplars = parse.parse_exemplars()
         self.action_graph = graph.make_graph(self.action_pairs['pairs'],
                                              self.action_pairs['links'])
+        self.idiomatics = parse.parse_idiomatics()
+        self.locations = parse.parse_locations()
 
     def tell(self, *args, **kwargs):
         '''Tell a story.
@@ -45,12 +47,18 @@ class StoryTeller():
             opening_sents = []
             opening_link = story['opening'][0]
             opening_sentences = story['opening'][1]
-            opening_sents.append('{} {} {}'.format(actor1, opening_sentences[0], actor2))
+            idi = choice(self.idiomatics[opening_sentences[0]])
+            sentence = idi.replace('A', actor1)
+            sentence = sentence.replace('B', actor2)
+            opening_sents.append('{}'.format(sentence))
             if opening_link in comma_triggers:
                 opening_sents.append(', {} '.format(opening_link))
             else:
                 opening_sents.append(' {} '.format(opening_link))
-            opening_sents.append('{} {} {}. '.format(actor1, opening_sentences[1], actor2))
+            idi = choice(self.idiomatics[opening_sentences[1]])
+            sentence = idi.replace('A', actor1)
+            sentence = sentence.replace('B', actor2)            
+            opening_sents.append('{}. '.format(sentence))
             res['opening'] = opening_sents
 
             #Construct middle
@@ -64,11 +72,14 @@ class StoryTeller():
                 middle_sents.append('{} '.format(initial_link.capitalize()))
             #Begin formatting rest of middle
             for n,(lnk,sent) in enumerate(rest_middle[:-1]):
+                idi = choice(self.idiomatics[sent])
+                sentence = idi.replace('A', actor1)
+                sentence = sentence.replace('B', actor2)
                 #Skip the final link.
                 if n==len(rest_middle[:-1])-1:
-                    middle_sents.append("{} {} {}".format(actor1, sent, actor2))
+                    middle_sents.append("{}".format(sentence))
                     break
-                middle_sents.append('{} {} {}'.format(actor1, sent, actor2))
+                middle_sents.append('{}'.format(sentence))
                 if lnk in comma_triggers:
                     middle_sents.append(', {} '.format(lnk))
                 elif lnk in sent_starters:
@@ -80,14 +91,23 @@ class StoryTeller():
             middle_end_sent = rest_middle[-1][1]
             if middle_end_lnk in sent_starters:
                 middle_sents.append('. {} '.format(middle_end_lnk.capitalize()))
-                middle_sents.append('{} {} {}. '.format(actor1, middle_end_sent, actor2))
+                idi = choice(self.idiomatics[middle_end_sent])
+                sentence = idi.replace('A', actor1)
+                sentence = sentence.replace('B', actor2)
+                middle_sents.append('{}. '.format(sentence))
             else:
-                middle_sents.append('. {} {} {}. '.format(actor1, middle_end_sent, actor2))
+                idi = choice(self.idiomatics[middle_end_sent])
+                sentence = idi.replace('A', actor1)
+                sentence = sentence.replace('B', actor2)
+                middle_sents.append('. {}. '.format(sentence))
             res['middle'] = middle_sents
 
             #Construct closing
             closing_sents = []
-            closing_sents.append('{} {} {}.'.format(actor1, story_bundle['closing'], actor2))
+            idi = choice(self.idiomatics[story_bundle['closing']])
+            sentence = idi.replace('A', actor1)
+            sentence = sentence.replace('B', actor2)
+            closing_sents.append('{}.'.format(sentence))
             res['closing'] = closing_sents
 
             return res
