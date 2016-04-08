@@ -4,6 +4,7 @@ Main module to put everything together.
 import graph
 import render
 import parse
+import templates
 
 from random import choice, randint
 
@@ -24,6 +25,8 @@ class StoryTeller():
                                              self.action_pairs['links'])
         self.idiomatics = parse.parse_idiomatics()
         self.locations = parse.parse_locations()
+        self.character_templates = templates.CHARACTER_DESCRIPTIONS
+        self.location_templates = templates.SETTING_DESCRIPTIONS
 
     def tell(self, *args, **kwargs):
         '''Tell a story.
@@ -115,6 +118,8 @@ class StoryTeller():
 
         plot = self.generate_plot(plots=20)
         actor1, actor2, action_list, links, evaluation = plot
+        # Select location on random for now
+        location = choice(self.locations)
 
         story_bundle =  {
                         'opening': (links[0], action_list[:2]),

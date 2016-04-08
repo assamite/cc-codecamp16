@@ -91,7 +91,7 @@ executive restroom	POS	Room	an	in	large	exclusive, indulgent, oversized, grandio
 fabrication lab	NEUT	Building	a	in		clean, sterile, shiny, bland, pristine, orderly, bright, windowless, cool, air-conditioned		
 factory floor	NEUT	Floor	a	in	large	hectic, noisy, busy, orderly, bustling, energetic, loud, cramped, crowded		
 family restaurant	POS	Building	a	in	large	cheery, cosy, casual, informal, warm, welcoming, inviting, relaxing, busy, upscale , comfortable, cheesy, tacky		
-fancy hotel	PIS	Building	a	in	large	exclusive, glitzy, flashy, glamorous, pretentious, ornate, ostentatious, pretentious, chic, stylish, sophisticated, glossy, showy, prestigious, sleek, upscale, upmarket, luxurious, polished, cosmopolitan, snooty, marbled		
+fancy hotel	POS	Building	a	in	large	exclusive, glitzy, flashy, glamorous, pretentious, ornate, ostentatious, pretentious, chic, stylish, sophisticated, glossy, showy, prestigious, sleek, upscale, upmarket, luxurious, polished, cosmopolitan, snooty, marbled		
 fancy restaurant	POS	Building	a	in	large	exclusive, glitzy, flashy, glamorous, pretentious, ornate, ostentatious, pretentious, chic, stylish, sophisticated, glossy, showy, sleek, upscale, upmarket, lush, elegant, cosmopolitan, smug, snooty, snug		
 Faraday cage	NEG	Room	a	in		cramped, claustrophobic, rusty, confining, miserable, windowless, smelly, uncomfortable, restrictive, unclean, barren, unsanitized		
 farmer's market	NEUT	Outside_Area	a	in	large	unsanitized, noisy, smelly, messy, aromatic, fragrant, colourful, fresh, bustling, rustic, smug		

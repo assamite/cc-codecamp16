@@ -215,17 +215,17 @@ SETTING_DESCRIPTIONS = [
     "It was late in the evening when #NAME found #PNR in a #NEUT_AMB #NEUT_LOC.",
     "It was late in the evening when #NAME found #PNR in a #NEG_AMB #NEG_LOC.",
     "It was late in the evening when #NAME found #PNR in a #POS_AMB #POS_LOC.",
-    "In the late evening, #NAME found #PNR in a #NEUT_AMB #NEUT_LOC."
-    "In the late evening, #NAME found #PNR in a #NEG_AMB #NEG_LOC."
-    "In the late evening, #NAME found #PNR in a #POS_AMB #POS_LOC."
-    "In the late evening, #NAME encountered #NOM in a #NEUT_AMB #NEUT_LOC."
-    "In the late evening, #NAME encountered #NOM in a #NEG_AMB #NEG_LOC."
-    "In the late evening, #NAME encountered #NOM in a #POS_AMB #POS_LOC."
-    "The #NEUT_LOC was #NEUT_AMB and #NEUT_AMB."
+    "In the late evening, #NAME found #PNR in a #NEUT_AMB #NEUT_LOC.",
+    "In the late evening, #NAME found #PNR in a #NEG_AMB #NEG_LOC.",
+    "In the late evening, #NAME found #PNR in a #POS_AMB #POS_LOC.",
+    "In the late evening, #NAME encountered #NOM in a #NEUT_AMB #NEUT_LOC.",
+    "In the late evening, #NAME encountered #NOM in a #NEG_AMB #NEG_LOC.",
+    "In the late evening, #NAME encountered #NOM in a #POS_AMB #POS_LOC.",
+    "The #NEUT_LOC was #NEUT_AMB and #NEUT_AMB.",
     "In the early morning, people trickled #PREP #DET #POS_LOC. It was #POS_AMB and #POS_AMB.",
     "Many people avoided the #NEG_LOC, no one wanted to spend time there.",
-    "The #NEG_LOC was #NEG_AMB and #NEG_AMB."
-    "The #POS_LOC was #NPOS_AMB and #POS_AMB."
+    "The #NEG_LOC was #NEG_AMB and #NEG_AMB.",
+    "The #POS_LOC was #POS_AMB and #POS_AMB.",
     "Of all the places #NAME expected to find #NOM, #DET #POS_LOC was not one of them.",
     "Of all the places #NAME expected to find #NOM, #DET #NEG_LOC was not one of them.",
     "Of all the places #NAME expected to find #NOM, #DET #NEUT_LOC was not one of them.",
