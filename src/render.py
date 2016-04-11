@@ -12,6 +12,22 @@ mappings = {
     '#GENDER': "Gender",
     }
 
+loc_mappings = {
+    '#POS_LOC': 'Location',
+    '#NEUT_LOC': 'Location',
+    '#NEG_LOC': 'Location',
+    '#POS_AMB': 'Ambience',
+    '#NEUT_AMB': 'Ambience',
+    '#NEG_AMB': 'Ambience'
+}
+
+def get_loc_variables(tmpl):
+    v = []
+    for m in loc_mappings:
+        if m in tmpl:
+            v.append((m, tmpl.count(m)))
+    return v
+
 def get_variables(tmpl):
     v = []
     for m in mappings:
@@ -68,6 +84,10 @@ def render_char_desc(character, tmpl):
     rendered = render_gender(character, rendered)
     return rendered
 
+def get_char_desc(character, templates, *args, **kwargs):
+    tmpl = get_char_template(character, templates)
+    return render_char_desc(character, tmpl)
+
 
 def get_location_template(loc, templates):
     possible_templates = []
@@ -88,7 +108,7 @@ def render_location_desc(char1, char2, location, tmpl):
     loc = location['Location']
     det = location['Determiner']
     prep = location['Preposition']
-    amb = choice(location['Ambience'])
+    amb = location['Ambience']
     n1 = char1['Character'][0]
     n2 = char2['Character'][0]
 
@@ -97,15 +117,38 @@ def render_location_desc(char1, char2, location, tmpl):
     rendered = rendered.replace('#PREP', prep)
     rendered = rendered.replace('#NAME', n1)
     rendered = rendered.replace('#NOM', n2)
+
     if mood == 'NEUT':
         rendered = rendered.replace('#NEUT_LOC', loc)
-        rendered = rendered.replace('#NEUT_AMB', amb)
+        used = []
+        while '#NEUT_AMB' in rendered:
+            var = choice(amb)
+            while var in used:
+                var = choice(amb)
+            used.append(var)
+            rendered = rendered.replace('#NEUT_AMB', var, 1)
+        #rendered = rendered.replace('#NEUT_AMB', amb, 1)
     if mood == 'POS':
         rendered = rendered.replace('#POS_LOC', loc)
-        rendered = rendered.replace('#POS_AMB', amb)
+        used = []
+        while '#POS_AMB' in rendered:
+            var = choice(amb)
+            while var in used:
+                var = choice(amb)
+            used.append(var)
+            rendered = rendered.replace('#POS_AMB', var, 1)
+        #rendered = rendered.replace('#POS_AMB', amb, 1)
     if mood == 'NEG':
         rendered = rendered.replace('#NEG_LOC', loc)
-        rendered = rendered.replace('#NEG_AMB', amb)
+        used = []
+        while '#NEG_AMB' in rendered:
+            var = choice(amb)
+            while var in used:
+                var = choice(amb)
+            used.append(var)
+            rendered = rendered.replace('#NEG_AMB', var, 1)
+        #rendered = rendered.replace('#NEG_AMB', amb, 1)
+
     rendered = render_gender(char1, rendered, char2)
     return rendered
 
@@ -141,11 +184,11 @@ def simplepastify(in_string):
 
 if __name__ == "__main__":
     import parse
-    tmpls = templates.CHARACTER_DESCRIPTIONS
-    noc = parse.parse_NOC()
-    for c in noc:
-        char = noc[c]
-        tmpl = get_char_template(char, tmpls)
+    tmpls = templates.SETTING_DESCRIPTIONS
+    locations = parse.parse_locations()
+    for loc in locations:
+        l = locations[loc]
+        tmpl = get_char_template(l, tmpls)
         if tmpl is None:
-            print char
-        print render_char_desc(char, tmpl)
+            print l
+        print render_char_desc(l, tmpl)

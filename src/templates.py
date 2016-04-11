@@ -142,28 +142,28 @@ NEG = [
 CHARACTER_DESCRIPTIONS = [
     "#NAME was as #POS as #GPR was #POS.",
     "#NAME was as #NEG as #GPR was #NEG.",
-    "#NOM was as #NEG as #GPR was #NEG.",
-    "#NOM was as #POS as #GPR was #POS.",
+    #"#NOM was as #NEG as #GPR was #NEG.",
+    #"#NOM was as #POS as #GPR was #POS.",
     "#NAME was as #NEG as #GPR was #POS.",
     "#NAME was as #POS as #GPR was #NEG.",
-    "#NOM was as #NEG as #GPR was #POS.",
-    "#NOM was as #POS as #GPR was #NEG.",
-    "#NAME was as #POS as #NOM was #NEG.",
-    "#NOM was as #POS as #NAME was #NEG.",
+    #"#NOM was as #NEG as #GPR was #POS.",
+    #"#NOM was as #POS as #GPR was #NEG.",
+    #"#NAME was as #POS as #NOM was #NEG.",
+    #"#NOM was as #POS as #NAME was #NEG.",
     "#NAME, a #POS and #POS #GNN, had a knack for getting people to do things.",
     "#NAME, as a #NEG #GNN, often got what #GPR wanted.",
     "A #POS #GNN, #NAME was widely respected in #GPN social circles.",
     "Even #NAME's closest acquaintances steered clear of #GPS because they knew what a #NEG #GNN #GPR was.",
     "#NAME, who appeared #POS and #POS, occasionally slipped up and let people see #GPN #NEG side.",
-    "#NOM wanted people to think #GPR was only #NEG and #NEG. If people found out #GPR was also #POS, they would never look at #GPR the same.",
+    #"#NOM wanted people to think #GPR was only #NEG and #NEG. If people found out #GPR was also #POS, they would never look at #GPR the same.",
     "A #POS and #POS #GNN, #NAME was well-liked.",
     "Everyone thought #NAME was such a #POS #GNN, but #GPR was quite #NEG as well.",
     "A #NEG and #NEG #GNN, #NAME was not well-liked.",
     "People admired #NAME for #GPN #POS personality.",
     "People didn't like #NAME because of #GPN #NEG character.",
-    "#NOM was envious of how #POS #NAME was."
-    "#NAME never understood why #NOM was so #NEG.",
-    "Some people wouldn't like to be #NEG or #NEG, but #NOM embraced these qualities in #PNR.",
+    #"#NOM was envious of how #POS #NAME was."
+    #"#NAME never understood why #NOM was so #NEG.",
+    #"Some people wouldn't like to be #NEG or #NEG, but #NOM embraced these qualities in #PNR.",
     ]
 
 CHARACTER_RELATIONSHIPS = [

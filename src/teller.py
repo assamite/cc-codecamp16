@@ -1,10 +1,13 @@
 '''
 Main module to put everything together.
 '''
+import re
+
 import graph
 import render
 import parse
 import templates
+import dramatize
 
 from random import choice, randint
 from GS import GS, Word2Vec
@@ -135,8 +138,12 @@ class StoryTeller():
         actor1, actor2, action_list, links, evaluation = plot
         # Select location on random for now
         location = choice(self.locations.values())
-        setting_sentence = render.get_location_desc(self.noc[actor1], self.noc[actor2],
+        char1 = self.noc[actor1]
+        char2 = self.noc[actor2]
+        setting_sentence = render.get_location_desc(char1, char2,
                                                     location, self.location_templates)
+        actor1_desc = render.get_char_desc(char1, self.character_templates)
+        actor2_desc = render.get_char_desc(char2, self.character_templates)
 
         story_bundle =  {
                         'opening': (links[0], action_list[:2]),
@@ -145,15 +152,33 @@ class StoryTeller():
                         }
 
         #Format story
-        print setting_sentence
-        print ''.join(linearize(story_bundle, actor1, actor2)['opening'])
-        print ''.join(linearize(story_bundle, actor1, actor2)['middle'])
-        print ''.join(linearize(story_bundle, actor1, actor2)['closing'])
+        opening = ''.join(linearize(story_bundle, actor1, actor2)['opening'])
+        mid = ''.join(linearize(story_bundle, actor1, actor2)['middle'])
+        closing = ''.join(linearize(story_bundle, actor1, actor2)['closing'])
 
-        #for i in range(len(action_list[:-1])):
-        #    print "{} {} {}".format(actor1, action_list[i], actor2)
-        #    print "{}".format(links[i])
-        #print "{} {} {}".format(actor1, action_list[-1], actor2)
+        story = ""
+        story = story + actor1_desc
+        story = story + setting_sentence
+        story = story + opening 
+        story = story + mid
+        story = story + closing
+
+        story = dramatize.dramatize(story)
+        return self.sanitize(story)
+
+    def sanitize(self, story):
+        '''Sanitize story to be more readable.'''
+        # This is horrible code, could be refactored.
+        story = re.sub(r'[.]', '. ', story)
+        story = re.sub(r'[,]', ', ', story)
+        story = re.sub(r'([\s]+)', ' ', story)
+        story = re.sub(r'([\s]+[.])', '. ', story)
+        story = re.sub(r'([\s]+[,])', ', ', story)
+        story = re.sub(r" '", "'", story)
+        story = re.sub(r'" "', '"', story)
+        story = re.sub(r'([\s]+)', ' ', story)
+        story = story.strip()
+        return story
 
     def generate_plot(self, plots=100):
         '''Use generate and test-method to select best possible plot and
@@ -209,6 +234,7 @@ class StoryTeller():
         return ac, actor1, actor2
 
     def select_actors(self, exemplars):
+        '''Select actors based on exemplars.'''
         actor1 = self.select_actor(exemplars[0])
         if actor1 == None:
             return None, None
@@ -224,6 +250,7 @@ class StoryTeller():
         return actor1, actor2
 
     def select_actor(self, exemplar):
+        '''Select actor based on exemplar.'''
         possible_characters = []
         for char in self.exemplars:
             if exemplar in self.exemplars[char]['most']:

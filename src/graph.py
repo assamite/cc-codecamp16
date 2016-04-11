@@ -71,7 +71,6 @@ def get_links(G, action_list):
     return links
 
 if __name__ == "__main__":
-    import parse
     d = parse.parse_pairs()
     G = make_graph(d['pairs'], d['links'])
     print nx.has_path(G, 'are_marketed_by', 'take_advantage_of')
